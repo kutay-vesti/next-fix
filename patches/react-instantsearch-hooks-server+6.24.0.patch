@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-instantsearch-hooks-server/dist/es/getServerState.js b/node_modules/react-instantsearch-hooks-server/dist/es/getServerState.js
+index 23b1503..328227a 100644
+--- a/node_modules/react-instantsearch-hooks-server/dist/es/getServerState.js
++++ b/node_modules/react-instantsearch-hooks-server/dist/es/getServerState.js
+@@ -6,7 +6,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
+ 
+ import { isIndexWidget } from "instantsearch.js/es/widgets/index/index.js";
+ import React from 'react';
+-import ReactDOM from "react-dom/server.js";
++import ReactDOM from "react-dom/server";
+ import { InstantSearchServerContext, InstantSearchSSRProvider } from 'react-instantsearch-hooks';
+ 
+ /**
