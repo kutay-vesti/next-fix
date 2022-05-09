@@ -1,98 +1,88 @@
-import Head from 'next/head';
-import { GetServerSideProps } from 'next';
-import algoliasearch from 'algoliasearch/lite';
-import { Hit as AlgoliaHit } from 'instantsearch.js';
+import { ApolloClient } from "@apollo/client";
+import Layout from "@components/common/Layout";
+import ProductCarousel from "@components/common/ProductCarousel";
+
+import { EventType, Hero } from "@components/home";
+import { Divider } from "@components/ui";
+import { initializeApollo } from "@lib/apollo";
+import { getProductsQuery, getShopEventTypeQuery } from "graphql/queries";
 import {
-  DynamicWidgets,
-  InstantSearch,
-  Hits,
-  Highlight,
-  RefinementList,
-  SearchBox,
-  InstantSearchServerState,
-  InstantSearchSSRProvider,
-} from 'react-instantsearch-hooks-web';
-import { getServerState } from 'react-instantsearch-hooks-server';
-import { history } from 'instantsearch.js/es/lib/routers/index.js';
-import { Panel } from '../components/Panel';
+  getProducts,
+  getProductsVariables,
+} from "graphql/__generated__/getProducts";
+import { Sorting } from "graphql/__generated__/globalTypes";
+import { shopEventTypeQuery } from "graphql/__generated__/shopEventTypeQuery";
 
-const client = algoliasearch('latency', '6be0576ff61c053d5f9a3225e2a90f76');
+import type {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+  NextPage,
+} from "next";
+import Link from "next/link";
 
-type HitProps = {
-  hit: AlgoliaHit<{
-    name: string;
-    price: number;
-  }>;
-};
+export const getStaticProps: GetStaticProps = async () => {
+  const apolloClient: ApolloClient<object> = initializeApollo();
 
-function Hit({ hit }: HitProps) {
-  return (
-    <>
-      <Highlight hit={hit} attribute="name" className="Hit-label" />
-      <span className="Hit-price">${hit.price}</span>
-    </>
+  const { data: eventTypeQuery } = await apolloClient.query<shopEventTypeQuery>(
+    {
+      query: getShopEventTypeQuery,
+    }
   );
-}
 
-type HomePageProps = {
-  serverState?: InstantSearchServerState;
-  url?: string;
-};
-
-export default function HomePage({ serverState, url }: HomePageProps) {
-  return (
-    <InstantSearchSSRProvider {...serverState}>
-      <Head>
-        <title>React InstantSearch - Next.js</title>
-      </Head>
-
-      <InstantSearch
-        searchClient={client}
-        indexName="instant_search"
-        routing={{
-          router: history({
-            getLocation() {
-              if (typeof window === 'undefined') {
-                return new URL(url!) as unknown as Location;
-              }
-
-              return window.location;
-            },
-          }),
-        }}
-      >
-        <div className="Container">
-          <div>
-            <DynamicWidgets fallbackComponent={FallbackComponent} />
-          </div>
-          <div>
-            <SearchBox />
-            <Hits hitComponent={Hit} />
-          </div>
-        </div>
-      </InstantSearch>
-    </InstantSearchSSRProvider>
-  );
-}
-
-function FallbackComponent({ attribute }: { attribute: string }) {
-  return (
-    <Panel header={attribute}>
-      <RefinementList attribute={attribute} />
-    </Panel>
-  );
-}
-
-export const getServerSideProps: GetServerSideProps<HomePageProps> =
-  async function getServerSideProps({ req }) {
-    const protocol = req.headers.referer?.split('://')[0] || 'https';
-    const url = `${protocol}://${req.headers.host}${req.url}`;
-    const serverState = await getServerState(<HomePage url={url} />);
-
-    return {
-      props: {
-        serverState,
-        url,
+  const { data: productData, error } = await apolloClient.query<
+    getProducts,
+    getProductsVariables
+  >({
+    query: getProductsQuery,
+    variables: {
+      input: {
+        category: "elbise",
+        collections: ["collection"],
+        eventTypes: null,
+        colors: null,
+        sizes: null,
+        filters: null,
+        dates: null,
+        sorting: Sorting[Sorting.Recommended],
+        offset: 1,
+        limit: 8,
       },
-    };
+    },
+  });
+
+  return {
+    props: {
+      eventTypeQuery,
+      productData,
+    },
   };
+};
+
+export default function Home({
+  eventTypeQuery,
+  productData,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  return (
+    <div className="flex flex-col">
+      <Hero />
+      <EventType eventTypeQuery={eventTypeQuery} />
+      <Divider />
+      <Link href="/collections/collection">collection</Link>
+
+      <Link href="/login">login</Link>
+      <Link href="/auth-check">auth</Link>
+      <ProductCarousel
+        CollectionName="collection"
+        HeadlineText="Recent Collection"
+        productData={productData}
+      />
+      <div className="h-96 bg-red-600 py-4"></div>
+      <div className="h-96 bg-green-600 py-4"></div>
+      <div className="h-96 bg-red-600 py-4"></div>
+      <div className="h-96 bg-cyan-600 py-4"></div>
+    </div>
+  );
+}
+
+Home.Layout = Layout;

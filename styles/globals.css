@@ -1,22 +1,82 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "react-day-picker/lib/style.css";
+/* @import "@algolia/react-instantsearch-widget-color-refinement-list/dist/style.css";  */
+/* @import '@algolia/react-instantsearch-widget-size-refinement-list/dist/style.css'; */
 
-body {
-  padding: 0.5rem;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-.Container {
-  display: grid;
-  align-items: flex-start;
-  grid-template-columns: minmax(min-content, 200px) 1fr;
-  gap: 0.5rem;
-}
+@layer components {
+    .input {
+      @apply py-3 px-2 border border-black bg-gray-50 shadow-inner focus:ring-2 focus:ring-blue-600  focus:ring-opacity-50 focus:outline-none;
+    }
+    /* .input {
+      @apply py-3 px-2 rounded-lg bg-gray-50 shadow-inner focus:ring-2 focus:ring-blue-600  focus:ring-opacity-50 focus:outline-none;
+    } */
+    .btn {
+      @apply py-3 px-5 bg-gray-800 text-white font-medium text-lg  rounded-lg focus:outline-none hover:opacity-90;
+    }
+    .tableHeader {
+      @apply py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+    }
+  
+    .swiper-pagination {
+      @apply flex flex-col gap-y-5;
+    }
+    .swiper-slide {
+      @apply bg-gray-300;
+    }
+  
+    /* .DayPicker-Day--highlighted {
+      @apply bg-orange-400 text-white;
+    } */
+  }
+  
+  .DayPicker-Day--highlighted {
+    background-color: rgb(251 146 60 / var(--tw-bg-opacity));
+  }
+  
+  .DayPicker {
+    display: inline-block;
+    font-size: 1.2rem;
+  }
+  
+  .DayPicker-Day {
+    @apply py-3 px-5 border border-gray-300;
+  }
+  .DayPicker-Caption {
+    @apply text-center font-semibold;
+  }
+  .swiper-pagination-bullet {
+    @apply bg-[#fff] opacity-50 ring-1 ring-[#aaa];
+  }
+  /* .swiper {
+    width: 100%;
+    height: 100%;
+  }
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .swiper-pagination-bullet {
+    border-radius: 0;
+    width: 40px;
+    height: 60px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    color: #000;
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .swiper-pagination-bullet-active {
+    color: #fff;
+    background: #007aff;
+    border-radius: 0.25rem;
+  } */
+  
+  .swiper-pagination-bullet-active {
+    background: #000000;
+    opacity: 0.9;
+  }
