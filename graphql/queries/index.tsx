@@ -6,3 +6,4 @@ export { default as getMyOrders } from "./get-my-orders-query";
 export { default as getShopEventTypeQuery } from "./get-shop-event-type-query";
 export { default as getProductQuery } from "./get-product-query";
 export { default as getMeQuery } from "./get-me-query";
+export { default as getEditProfileQuery } from "./get-edit-profile-query";

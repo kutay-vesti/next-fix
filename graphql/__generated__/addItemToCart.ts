@@ -6,10 +6,10 @@
 import { AddItemToCartInput, CartItemType } from "./globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: addToCartMutation
+// GraphQL mutation operation: addItemToCart
 // ====================================================
 
-export interface addToCartMutation_addItemToCart_cart_cartItems_sku {
+export interface addItemToCart_addItemToCart_cart_cartItems_sku {
   __typename: "StockKeepingUnit";
   sku: string;
   retailStock: number;
@@ -18,33 +18,33 @@ export interface addToCartMutation_addItemToCart_cart_cartItems_sku {
   rentalPrice8Days: number;
 }
 
-export interface addToCartMutation_addItemToCart_cart_cartItems {
+export interface addItemToCart_addItemToCart_cart_cartItems {
   __typename: "CartItem";
   id: string;
   itemType: CartItemType;
   quantity: number;
-  sku: addToCartMutation_addItemToCart_cart_cartItems_sku;
+  sku: addItemToCart_addItemToCart_cart_cartItems_sku;
 }
 
-export interface addToCartMutation_addItemToCart_cart {
+export interface addItemToCart_addItemToCart_cart {
   __typename: "Cart";
   id: string;
   multipleVendors: boolean;
   totalPrice: number;
-  cartItems: addToCartMutation_addItemToCart_cart_cartItems[] | null;
+  cartItems: addItemToCart_addItemToCart_cart_cartItems[] | null;
 }
 
-export interface addToCartMutation_addItemToCart {
+export interface addItemToCart_addItemToCart {
   __typename: "AddItemToCartOutput";
   ok: boolean;
   error: string | null;
-  cart: addToCartMutation_addItemToCart_cart | null;
+  cart: addItemToCart_addItemToCart_cart | null;
 }
 
-export interface addToCartMutation {
-  addItemToCart: addToCartMutation_addItemToCart;
+export interface addItemToCart {
+  addItemToCart: addItemToCart_addItemToCart;
 }
 
-export interface addToCartMutationVariables {
+export interface addItemToCartVariables {
   input: AddItemToCartInput;
 }

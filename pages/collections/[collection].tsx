@@ -39,6 +39,7 @@ import Adjustment from "@components/icons/Adjustment";
 import { RefinementListSize } from "@components/collection/RefinementList/RefinementListSize";
 import { RefinementListColor } from "@components/collection/RefinementList/RefinementListColor";
 import CustomSortBy from "@components/collection/SortBy/SortBy";
+import { MobileFilterMenuLayout } from "@components/collection/MobileFilterMenu/MobileFilterMenuLayout/MobileFilterMenuLayout";
 
 const client = algoliasearch("2S3Q24UHG3", "2479538bbf6bfdcdf3c5e7103b18b1cb");
 type HitProps = {
@@ -82,7 +83,7 @@ function Hit({ hit }: any) {
 const Collection: NextPage = () => {
   const router = useRouter();
   console.log("router", router.query.collection);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   return (
     <div className="flex flex-row items-center  justify-center ">
@@ -169,6 +170,26 @@ const Collection: NextPage = () => {
 
             <div>{/* <SearchBox /> */}</div>
           </div>
+        </div>
+        <div>
+          <MobileFilterMenuLayout
+            isFilterOpen={isFilterOpen}
+            setIsFilterOpen={setIsFilterOpen}
+          >
+            <>
+              <div className="px-4 pt-2 pb-2 text-sm text-gray-500 ">
+                <Panel header="Size">
+                  <RefinementListSize attribute="size.values" />
+                </Panel>
+                <Panel header="color.values">
+                  <RefinementListColor attribute="color.values" />
+                </Panel>
+
+                {/* <DynamicWidgets fallbackComponent={FallbackComponent} /> */}
+                <DynamicWidgets fallbackComponent={FallbackComponent} />
+              </div>
+            </>
+          </MobileFilterMenuLayout>
         </div>
       </InstantSearch>
     </div>

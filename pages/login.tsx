@@ -1,4 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
+import { setAccessToken } from "@lib/accesstoken";
 import {
   loginMutation,
   loginMutationVariables,
@@ -51,6 +52,8 @@ const Login: NextPage = () => {
       login: { error, ok, token },
     } = data;
     if (ok && token) {
+      console.log("token", token);
+      setAccessToken(token);
       // localStorage.setItem(LOCALSTORAGE_TOKEN, token);
       // authToken(token);
       // isLoggedInVar(true);

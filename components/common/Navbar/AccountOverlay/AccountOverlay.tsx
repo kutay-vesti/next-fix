@@ -1,8 +1,10 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { Account } from "@components/icons";
+import { setAccessToken } from "@lib/accesstoken";
 import { getMeQuery, getMyCartQuery } from "graphql/queries";
 import Link from "next/link";
 import { FC } from "react";
+import { Cookies } from "react-cookie";
 
 const AccountOverlay: FC = () => {
   const { data, loading, error, refetch: reFetchMe } = useQuery(getMeQuery);
@@ -171,6 +173,7 @@ const AccountOverlay: FC = () => {
                 <button
                   onClick={() => {
                     localStorage.clear();
+                    setAccessToken("");
                     reFetchMe();
                     refetch();
                     window.location.reload();

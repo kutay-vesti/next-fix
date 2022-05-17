@@ -1,6 +1,8 @@
+import useUser from "@lib/hooks/useUser";
 import { useRouter } from "next/router";
 import { ReactNode, useState } from "react";
 import Footer from "../Footer";
+import MobileMenu from "../MobileMenu/MobileMenu";
 import Navbar from "../Navbar";
 
 export type Category = {
@@ -41,13 +43,19 @@ const Layout: React.FC<Props> = ({
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
-
+  const { data, loading, error } = useUser();
   return (
     <>
       <div className="  min-h-screen  ">
         <div className="">
           <Navbar open={open} setOpen={setOpen} navigation={navigation} />
         </div>
+        <MobileMenu
+          data={data}
+          navigation={navigation}
+          open={open}
+          setOpen={setOpen}
+        />
         <main className="-z-0"> {children}</main>
         <Footer />
       </div>

@@ -42,6 +42,8 @@ const ProductCarousel: React.FC<IProductCarousel> = ({
     swiperInst.slideTo(activeIndex + 5);
   };
 
+  console.log("productData", productData);
+
   const positionHandler = (slideIndex: number) => {
     if (slideIndex === 0) {
       return setPosition("start");

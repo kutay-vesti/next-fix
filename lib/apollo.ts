@@ -2,10 +2,13 @@ import { useMemo } from 'react';
 
 import type { GetServerSidePropsContext } from 'next';
 import type { IncomingMessage } from 'http';
-import { createHttpLink, NormalizedCacheObject } from '@apollo/client';
+import { ApolloLink, createHttpLink, NormalizedCacheObject, Observable } from '@apollo/client';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-
+import { getAccessToken, setAccessToken } from './accesstoken';
+import { onError } from "@apollo/client/link/error";
+import { TokenRefreshLink } from "apollo-link-token-refresh";
+import jwtDecode from "jwt-decode";
 
 interface PageProps {
   props?: Record<string, any>;
@@ -36,17 +39,110 @@ export const COOKIES_TOKEN_NAME = 'jwt';
 //   credentials: 'include',
 // });
 
+const requestLink = new ApolloLink(
+  (operation, forward) =>
+    new Observable(observer => {
+      let handle: any;
+      Promise.resolve(operation)
+        .then(operation => {
+          const accessToken = getAccessToken();
+          if (accessToken) {
+            operation.setContext({
+              headers: {
+                authorization: `Bearer ${accessToken}`
+              }
+            });
+          }
+        })
+        .then(() => {
+          handle = forward(operation).subscribe({
+            next: observer.next.bind(observer),
+            error: observer.error.bind(observer),
+            complete: observer.complete.bind(observer)
+          });
+        })
+        .catch(observer.error.bind(observer));
+
+      return () => {
+        if (handle) handle.unsubscribe();
+      };
+    })
+);
+
 let apolloClient:any
 
+
+
+// function createApolloClient() {
+//   return new ApolloClient({
+//     ssrMode: typeof window === 'undefined', // set to true for SSR
+
+    
+//     link: new HttpLink({
+//       uri: 'http://localhost:4000/graphql',
+//     }),
+//     cache: new InMemoryCache(),
+//     credentials: 'include',
+//   });
+// }
+
+
+
 function createApolloClient() {
-  return new ApolloClient({
-    ssrMode: typeof window === 'undefined', // set to true for SSR
-    link: new HttpLink({
-      uri: 'http://localhost:4000/graphql',
+
+return new ApolloClient({
+  ssrMode: typeof window === 'undefined', // set to true for SSR
+
+  link: ApolloLink.from([
+    new TokenRefreshLink({
+      accessTokenField: "accessToken",
+      isTokenValidOrUndefined: () => {
+        const token = getAccessToken();
+
+        if (!token) {
+          return true;
+        }
+
+        try {
+          const { exp } = jwtDecode(token);
+      
+          if (Date.now() >= exp * 1000) {
+            return false;
+          } else {
+            return true;
+          }
+        } catch {
+          return false;
+        }
+      },
+      fetchAccessToken: () => {
+        return fetch("localhost:4000/refreshToken", {
+          method: "POST",
+          credentials: "include"
+        });
+      },
+      handleFetch: accessToken => {
+        console.log("access token ",accessToken)
+        setAccessToken(accessToken);
+      },
+      handleError: err => {
+        console.warn("Your refresh token is invalid. Try to relogin");
+        console.error(err);
+      }
     }),
-    cache: new InMemoryCache(),
-    credentials: 'include',
-  });
+    onError(({ graphQLErrors, networkError }) => {
+      console.log(graphQLErrors);
+      console.log(networkError);
+    }),
+    requestLink,
+    new HttpLink({
+      uri: "http://localhost:4000/graphql",
+      credentials: "include"
+    })
+  ]),
+  cache: new InMemoryCache(),
+})
+
 }
 
 export function initializeApollo(initialState:any = null) {

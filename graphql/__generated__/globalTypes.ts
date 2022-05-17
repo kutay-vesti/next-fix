@@ -119,6 +119,29 @@ export interface AddItemToCartInput {
   isExpressShipping: boolean;
 }
 
+export interface CreateAddressInput {
+  title: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state?: string | null;
+  zipCode: string;
+  country: string;
+  phoneNumber: string;
+  firstname?: string | null;
+  lastname?: string | null;
+  isDefault?: boolean | null;
+}
+
+export interface DeleteAddressInput {
+  id: string;
+}
+
+export interface DeleteItemFromCartInput {
+  itemType: CartItemType;
+  sku: string;
+}
+
 export interface GetAttributesOfCategoryInput {
   category?: string | null;
 }
@@ -148,6 +171,42 @@ export interface ProductFilterInputType {
 export interface ProductFiltersInputType {
   label: string;
   values: string[];
+}
+
+export interface RemoveItemFromCartInput {
+  itemType: CartItemType;
+  quantity: number;
+  sku: string;
+}
+
+export interface SetDefaultAddressInput {
+  addressId: string;
+}
+
+export interface UpdateAddressInput {
+  id: string;
+  createdAt?: any | null;
+  updatedAt?: any | null;
+  title?: string | null;
+  addressLine1?: string | null;
+  addressLine2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zipCode?: string | null;
+  country?: string | null;
+  phoneNumber?: string | null;
+  firstname?: string | null;
+  lastname?: string | null;
+}
+
+export interface UpdateUserInput {
+  email?: string | null;
+  phone?: string | null;
+  password?: string | null;
+  firstname?: string | null;
+  lastname?: string | null;
+  tc?: string | null;
+  birthDate?: string | null;
 }
 
 //==============================================================

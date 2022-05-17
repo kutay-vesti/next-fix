@@ -6,16 +6,18 @@ import { productPageQuery } from "graphql/__generated__/productPageQuery";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import * as _ from "lodash";
-import {
-  addToCartMutation,
-  addToCartMutationVariables,
-} from "graphql/__generated__/addToCartMutation";
+
 import { RadioGroup } from "@headlessui/react";
 import moment from "moment";
 import ProductImageBox from "../ProductImageBox";
 import ProductHeader from "../ProductHeader";
 import ProductRentOption from "../ProductRentOption";
 import ProductBuyOption from "../ProductBuyOption";
+import { addItemToCartMutation } from "graphql/mutation";
+import {
+  addToCartMutation,
+  addToCartMutationVariables,
+} from "graphql/__generated__/addToCartMutation";
 
 // import cn from 'clsx'
 // import type { Product } from '@commerce/types/product'
@@ -29,32 +31,6 @@ import ProductBuyOption from "../ProductBuyOption";
 interface ProductViewProps {
   productData: productPageQuery;
 }
-
-export const ADD_TO_CART_MUTATION = gql`
-  mutation addToCartMutation($input: AddItemToCartInput!) {
-    addItemToCart(input: $input) {
-      ok
-      error
-      cart {
-        id
-        multipleVendors
-        totalPrice
-        cartItems {
-          id
-          itemType
-          quantity
-          sku {
-            sku
-            retailStock
-            rentalStock
-            rentalPrice4Days
-            rentalPrice8Days
-          }
-        }
-      }
-    }
-  }
-`;
 
 enum CartItemType {
   rental = "rental",
@@ -202,15 +178,15 @@ const ProductView: FC<ProductViewProps> = ({ productData }) => {
     console.log(MutationData);
     router.push("/cart");
   };
+
+  const product = productData.getProduct.product;
   const [
     addToCartMutation,
     { loading: mutationLoading, data: MutationData, error: mutationError },
   ] = useMutation<addToCartMutation, addToCartMutationVariables>(
-    ADD_TO_CART_MUTATION,
+    addItemToCartMutation,
     { onCompleted: onCompletedMutation }
   );
-
-  const product = productData.getProduct.product;
 
   return (
     <>
