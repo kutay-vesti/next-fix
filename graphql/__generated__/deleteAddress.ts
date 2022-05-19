@@ -9,14 +9,14 @@ import { DeleteAddressInput } from "./globalTypes";
 // GraphQL mutation operation: deleteAddress
 // ====================================================
 
-export interface deleteAddress_updateAddress {
+export interface deleteAddress_deleteAddress {
   __typename: "UpdateAddressOutput";
   ok: boolean;
   error: string | null;
 }
 
 export interface deleteAddress {
-  updateAddress: deleteAddress_updateAddress;
+  deleteAddress: deleteAddress_deleteAddress;
 }
 
 export interface deleteAddressVariables {

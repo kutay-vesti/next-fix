@@ -29,7 +29,19 @@ const ShoppingBagOverlay: FC = () => {
   const cartData = data?.myCart;
 
   if (loading) {
-    return <div>yükleniyor...</div>;
+    return (
+      <div className="antialiased  z-10 rounded-full flex items-cemter justify-center  ">
+        <div className="group inline-block relative hover:bg-[#efefef] rounded-full p-2  ">
+          <Link href="/cart">
+            <a>
+              <div>
+                <ShoppingBag className="h-6 w-6 ml-0.5 text-[#333] hover:opacity-70" />
+              </div>
+            </a>
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   // console.log("cart data", cartData?.cart?.cartItems?.length);

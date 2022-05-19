@@ -36,6 +36,7 @@ export function RefinementListColor(props: RefinementListProps) {
 
   return (
     <div className={cx("ais-RefinementList", props.className)}>
+      <div>{props.attribute}</div>
       {props.searchable && (
         <div className="ais-RefinementList-searchBox">
           <ControlledSearchBox
@@ -99,9 +100,9 @@ export function RefinementListColor(props: RefinementListProps) {
                   <span className="text-black ">
                     {item.isRefined ? (
                       color === "black" ? (
-                        <Check className="w-6 h-6 absolute text-white top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                        <Check className="w-6 h-6 absolute  stroke-white top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                       ) : (
-                        <Check className="w-6 h-6 absolute text-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                        <Check className="w-6 h-6 absolute stroke-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                       )
                     ) : null}
                   </span>

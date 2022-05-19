@@ -14,10 +14,12 @@ import { editprofilemeQuery } from "graphql/__generated__/editprofilemeQuery";
 import { myOrders } from "graphql/__generated__/myOrders";
 import moment from "moment";
 import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import Router from "next/router";
 interface IFormProps {
   firstname?: string;
   lastname?: string;
@@ -26,8 +28,11 @@ interface IFormProps {
 }
 const Profile: NextPage = () => {
   const router = useRouter();
-
+  const { data: session, status } = useSession();
   const { data: userDatae, loading: userLoading, error: userError } = useUser();
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
   const { data: userData, loading: queryLoading } =
     useQuery<editprofilemeQuery>(getEditProfileQuery);
@@ -144,82 +149,85 @@ const Profile: NextPage = () => {
     }
   }, [resetField, setValue, userData]);
 
-  return (
-    <>
-      <AccountLayout>
-        <div className="w-full">
-          <div className="header border-b border-gray-300  p-4 flex justify-between mx-4">
-            {/* <div className="header border border-gray-300  p-4 flex justify-between rounded-md mx-4"> */}
-            <h2 className="text-5xl font-black ">Kullanıcı Bilgilerim</h2>
-          </div>
-          {userData?.me.isVerified ? null : (
-            <div className="header my-4  bg-red-200 p-4 flex items-center justify-between rounded-md mx-4">
-              <span className="text-base font-medium">
-                Kullanıcı bilgilerinizi değiştirebilmek için E-posta adresinizi
-                doğrulamanız gerekmektedir
-              </span>
-
-              <button className="text-white text-md bg-green-500 hover:bg-green-700 py-2 px-4 rounded-md">
-                DOĞRULA
-              </button>
+  if (status === "authenticated") {
+    return (
+      <>
+        <AccountLayout>
+          <div className="w-full">
+            <div className="header border-b border-gray-300  p-4 flex justify-between mx-4">
+              {/* <div className="header border border-gray-300  p-4 flex justify-between rounded-md mx-4"> */}
+              <h2 className="text-5xl font-black ">Kullanıcı Bilgilerim</h2>
             </div>
-          )}
-          {/* form Start */}
-          {/* <div className="border border-gray-300 m-4 rounded-md bg-gray-200"> */}
-          <div className="border border-gray-50 m-4  bg-gray-50">
-            <div className="flex flex-col justify-center items-start p-4">
-              <h4>Üyelik Bilgilerim</h4>
-              <h3>Email Adresim: {userData?.me.email}</h3>
-              {/* <h3>{userData?.me.email}</h3> */}
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5"
-              >
-                <div className=" gap-x-4 flex flex-row">
-                  <Input
-                    // disabled={
-                    //   selectedAddress !== "newAddress" &&
-                    //   selectedAddress !== "Var olan adreslerden seçin"
-                    // }
-                    register={register}
-                    // defaultValue={defaultAddresses.lastname}
-                    inputValue="firstname"
-                    placeHolder="Adınız"
-                  />
-                  <Input
-                    // disabled={
-                    //   selectedAddress !== "newAddress" &&
-                    //   selectedAddress !== "Var olan adreslerden seçin"
-                    // }
-                    register={register}
-                    // defaultValue={defaultAddresses.lastname}
-                    inputValue="lastname"
-                    placeHolder="Soy adınız"
-                  />
-                </div>
-                <div className="w-full bg-red-200">
-                  <Input
-                    // disabled={
-                    //   selectedAddress !== "newAddress" &&
-                    //   selectedAddress !== "Var olan adreslerden seçin"
-                    // }
-                    register={register}
-                    // defaultValue={defaultAddresses.lastname}
-                    inputValue="phone"
-                    placeHolder="telefon Nnumaranız"
-                  />
-                </div>
-                <input
-                  defaultValue={birthDateVal !== undefined ? birthDateVal : ""}
-                  // value={userData?.me.birthDate}
-                  className="input"
-                  {...register("birthDate", {
-                    valueAsDate: true,
-                  })}
-                  type="date"
-                />
+            {userData?.me.isVerified ? null : (
+              <div className="header my-4  bg-red-200 p-4 flex items-center justify-between rounded-md mx-4">
+                <span className="text-base font-medium">
+                  Kullanıcı bilgilerinizi değiştirebilmek için E-posta
+                  adresinizi doğrulamanız gerekmektedir
+                </span>
 
-                {/* <input
+                <button className="text-white text-md bg-green-500 hover:bg-green-700 py-2 px-4 rounded-md">
+                  DOĞRULA
+                </button>
+              </div>
+            )}
+            {/* form Start */}
+            {/* <div className="border border-gray-300 m-4 rounded-md bg-gray-200"> */}
+            <div className="border border-gray-50 m-4  bg-gray-50">
+              <div className="flex flex-col justify-center items-start p-4">
+                <h4>Üyelik Bilgilerim</h4>
+                <h3>Email Adresim: {userData?.me.email}</h3>
+                {/* <h3>{userData?.me.email}</h3> */}
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5"
+                >
+                  <div className=" gap-x-4 flex flex-row">
+                    <Input
+                      // disabled={
+                      //   selectedAddress !== "newAddress" &&
+                      //   selectedAddress !== "Var olan adreslerden seçin"
+                      // }
+                      register={register}
+                      // defaultValue={defaultAddresses.lastname}
+                      inputValue="firstname"
+                      placeHolder="Adınız"
+                    />
+                    <Input
+                      // disabled={
+                      //   selectedAddress !== "newAddress" &&
+                      //   selectedAddress !== "Var olan adreslerden seçin"
+                      // }
+                      register={register}
+                      // defaultValue={defaultAddresses.lastname}
+                      inputValue="lastname"
+                      placeHolder="Soy adınız"
+                    />
+                  </div>
+                  <div className="w-full bg-red-200">
+                    <Input
+                      // disabled={
+                      //   selectedAddress !== "newAddress" &&
+                      //   selectedAddress !== "Var olan adreslerden seçin"
+                      // }
+                      register={register}
+                      // defaultValue={defaultAddresses.lastname}
+                      inputValue="phone"
+                      placeHolder="telefon Nnumaranız"
+                    />
+                  </div>
+                  <input
+                    defaultValue={
+                      birthDateVal !== undefined ? birthDateVal : ""
+                    }
+                    // value={userData?.me.birthDate}
+                    className="input"
+                    {...register("birthDate", {
+                      valueAsDate: true,
+                    })}
+                    type="date"
+                  />
+
+                  {/* <input
             {...register("email", {
               required: "email  is required",
               minLength: { value: 4, message: "en az 4 adet olmali" },
@@ -232,23 +240,28 @@ const Profile: NextPage = () => {
             className="input"
             placeholder="Email"
           /> */}
-                {/* {errors.email?.message && (
+                  {/* {errors.email?.message && (
             <FormError errorMessage={errors.email?.message} />
           )} */}
 
-                <Button
-                  loading={loading}
-                  canClick={isDirty}
-                  actionText="değişiklikleri kaydet"
-                ></Button>
-              </form>
+                  <Button
+                    loading={loading}
+                    canClick={isDirty}
+                    actionText="değişiklikleri kaydet"
+                  ></Button>
+                </form>
+              </div>
             </div>
+            <h1 className="bg-yellow-400">TODO Beden terchileri</h1>
           </div>
-          <h1 className="bg-yellow-400">TODO Beden terchileri</h1>
-        </div>
-      </AccountLayout>
-    </>
-  );
+        </AccountLayout>
+      </>
+    );
+  }
+  if (status === "unauthenticated") {
+    Router.replace("/auth/login");
+  }
+  return <div className="h-screen">Hesabınızı açınız</div>;
 };
 
 export default Profile;

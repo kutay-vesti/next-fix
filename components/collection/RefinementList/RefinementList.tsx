@@ -38,8 +38,11 @@ export function RefinementList(props: RefinementListProps) {
   //   return null;
   // }
 
+  if (items.length < 1) return null;
+
   return (
     <div className={cx("ais-RefinementList", props.className)}>
+      <div>{props.attribute}</div>
       {props.searchable && (
         <div className="ais-RefinementList-searchBox">
           <ControlledSearchBox
@@ -70,10 +73,17 @@ export function RefinementList(props: RefinementListProps) {
         {items.map((item) => (
           <li
             key={item.value}
-            className={cx(
+            // className={cx(
+            //   "ais-RefinementList-item  flex  w-fit tablet:w-full group mt-1 font-semibold text-xs  text-black  cursor-pointer justify-start  items-center",
+            //   item.isRefined && "ais-RefinementList-item--selected select-none"
+            // )}
+            className={`
               "ais-RefinementList-item  flex  w-fit tablet:w-full group mt-1 font-semibold text-xs  text-black  cursor-pointer justify-start  items-center",
-              item.isRefined && "ais-RefinementList-item--selected select-none"
-            )}
+              ${
+                item.isRefined &&
+                "ais-RefinementList-item--selected select-none"
+              }
+            `}
           >
             <label
               className={`ais-RefinementList-label py-2 px-4
@@ -84,7 +94,7 @@ export function RefinementList(props: RefinementListProps) {
                      ${
                        item.isRefined
                          ? "bg-black text-white tablet:bg-white tablet:text-[#272727]"
-                         : "text-[#272727]"
+                         : "text-[#272727] "
                      }
                      
                      `}
@@ -106,8 +116,14 @@ export function RefinementList(props: RefinementListProps) {
                 dangerouslySetInnerHTML={{ __html: item.highlighted! }}
               /> */}
 
-              <span className="hidden tablet:block tablet:w-5 tablet:h-5  tablet:bg-white border border-gray-300 rounded-md cursor-pointer tablet:group-hover:border-gray-600">
-                {item.isRefined ? <Check /> : null}
+              <span
+                className="hidden tablet:block tablet:w-5 tablet:h-5  tablet:bg-white border
+              border-gray-300 rounded-md cursor-pointer tablet:group-hover:border-gray-600
+              
+              
+              "
+              >
+                {item.isRefined ? <Check className="stroke-black" /> : null}
               </span>
               <span>{item.value}</span>
               <span className="ais-RefinementList-count">{item.count}</span>

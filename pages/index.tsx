@@ -70,7 +70,7 @@ export default function Home({
       <Divider />
       <Link href="/collections/collection">collection</Link>
 
-      <Link href="/login">login</Link>
+      <Link href="/auth/login">login</Link>
       <Link href="/auth-check">auth</Link>
       <ProductCarousel
         CollectionName="collection"

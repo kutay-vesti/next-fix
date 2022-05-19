@@ -1,7 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { Account } from "@components/icons";
-import { setAccessToken } from "@lib/accesstoken";
+
 import { getMeQuery, getMyCartQuery } from "graphql/queries";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { FC } from "react";
 import { Cookies } from "react-cookie";
@@ -10,16 +11,28 @@ const AccountOverlay: FC = () => {
   const { data, loading, error, refetch: reFetchMe } = useQuery(getMeQuery);
   const { refetch } = useQuery(getMyCartQuery);
   // console.log("account overlay ", data);
+  const { data: session, status } = useSession();
 
+  // console.log("session status", session, status);
   const client = useApolloClient();
   if (loading) {
-    return <div>yükleniyor...</div>;
+    return (
+      <div className="antialiased  z-50 rounded-full flex items-center justify-center  ">
+        <div className="group inline-block relative hover:bg-[#efefef] rounded-full p-2  ">
+          <Link href="/account/orders">
+            <a>
+              <Account className="h-6 w-6    text-[#333] hover:opacity-90  " />
+            </a>
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="antialiased  z-50 rounded-full flex items-center justify-center  ">
       <div className="group inline-block relative hover:bg-[#efefef] rounded-full p-2  ">
-        <Link href="/account/orders">
+        <Link href={!session ? "/auth/login/" : "/account/orders"}>
           <a>
             <Account className="h-6 w-6    text-[#333] hover:opacity-90  " />
           </a>
@@ -30,7 +43,7 @@ const AccountOverlay: FC = () => {
               <li className="">
                 {data === undefined ? (
                   <div className="pb-4 flex gap-x-1">
-                    <Link href="/login">
+                    <Link href="/auth/login">
                       <a className="bg-white border w-full text-center py-1.5 rounded-2xl text-sm font-semibold hover:border-gray-400">
                         Giriş
                       </a>
@@ -42,7 +55,7 @@ const AccountOverlay: FC = () => {
                     </Link>
                   </div>
                 ) : (
-                  <Link href="/account/orders">
+                  <Link href={!session ? "/auth/login/" : "/account/orders"}>
                     <a className="rounded-t    pb-4 block whitespace-no-wrap">
                       {data.me.firstname ? (
                         <span className="font-semibold text-sm m-3">
@@ -59,7 +72,7 @@ const AccountOverlay: FC = () => {
               </li>
               <div className="border-t  px-1  border-gray-200"> </div>
               <li className="">
-                <Link href="/account/orders">
+                <Link href={!session ? "/auth/login" : "/account/dashboard"}>
                   <a className=" flex justify-start  items-center h-12 hover:bg-[#f0f0f0] rounded-md py-2 px-4  whitespace-no-wrap gap-x-4">
                     <svg
                       width="24"
@@ -85,7 +98,7 @@ const AccountOverlay: FC = () => {
                 </Link>
               </li>
               <li className="">
-                <Link href="/account/orders">
+                <Link href={!session ? "/auth/login" : "/account/orders"}>
                   <a className=" flex justify-start  items-center h-12 hover:bg-[#f0f0f0] rounded-md py-2 px-4  whitespace-no-wrap gap-x-4">
                     <svg
                       width="24"
@@ -111,7 +124,7 @@ const AccountOverlay: FC = () => {
                 </Link>
               </li>
               <li className="">
-                <Link href="/account/orders">
+                <Link href={!session ? "/auth/login" : "/account/profile"}>
                   <a className=" flex justify-start  items-center h-12 hover:bg-[#f0f0f0] rounded-md py-2 px-4  whitespace-no-wrap gap-x-4">
                     <svg
                       width="24"
@@ -137,7 +150,7 @@ const AccountOverlay: FC = () => {
                 </Link>
               </li>
               <li className="">
-                <Link href="/account/orders">
+                <Link href={!session ? "/auth/login" : "/account/addresses"}>
                   <a className=" flex justify-start  items-center h-12 hover:bg-[#f0f0f0] rounded-md py-2 px-4  whitespace-no-wrap gap-x-4">
                     <svg
                       width="24"
@@ -172,11 +185,12 @@ const AccountOverlay: FC = () => {
               <li className={`${data?.me.role === "User" ? "" : "hidden"}`}>
                 <button
                   onClick={() => {
-                    localStorage.clear();
-                    setAccessToken("");
-                    reFetchMe();
-                    refetch();
-                    window.location.reload();
+                    // localStorage.clear();
+
+                    // reFetchMe();
+                    // refetch();
+                    // window.location.reload();
+                    signOut();
                   }}
                   className=" w-full flex justify-start  items-center h-12 hover:bg-[#f0f0f0] rounded-md py-2 px-4  whitespace-no-wrap gap-x-4"
                 >

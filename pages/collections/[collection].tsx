@@ -84,7 +84,8 @@ const Collection: NextPage = () => {
   const router = useRouter();
   console.log("router", router.query.collection);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
-
+  const [test, setTest] = useState();
+  console.log("test", test);
   return (
     <div className="flex flex-row items-center  justify-center ">
       <InstantSearch
@@ -104,8 +105,8 @@ const Collection: NextPage = () => {
         }}
       >
         <Configure filters={`collection:${router.query.collection}`} />
-        <div className="flex max-w-[1880px] w-full overflow-visible flex-col bg-red-600">
-          <div className=" mb-3 flex justify-between items-center bg-green-600">
+        <div className="flex max-w-[1880px] w-full overflow-visible flex-col ">
+          <div className=" mb-3 flex justify-between items-center">
             <h1 className="font-black text-4xl  uppercase pb-3">
               {/* {data?.getProducts.products?.length !== 0 &&
               data?.getProducts.products?.[0].collections?.[0].name} */}
@@ -134,15 +135,19 @@ const Collection: NextPage = () => {
           <div className="flex">
             <div className="flex-none  w-[230px]  h-screen sticky top-0 left-0 overflow-scroll  items-start justify-start overflow-x-hidden tablet:block hidden">
               <div className="px-4 pt-2 pb-2 text-sm text-gray-500 ">
-                <Panel header="Size">
-                  <RefinementListSize attribute="size.values" />
-                </Panel>
-                <Panel header="color.values">
-                  <RefinementListColor attribute="color.values" />
-                </Panel>
+                <RefinementListSize attribute="size.values" />
+
+                <RefinementListColor attribute="color.values" />
 
                 {/* <DynamicWidgets fallbackComponent={FallbackComponent} /> */}
-                <DynamicWidgets fallbackComponent={FallbackComponent} />
+                <DynamicWidgets
+                  // transformItems={(items, { results }) => {
+                  //   if (results.hits.length > 0) {
+                  //     return items;
+                  //   }
+                  // }}
+                  fallbackComponent={FallbackComponent}
+                />
               </div>
             </div>
 
@@ -178,12 +183,9 @@ const Collection: NextPage = () => {
           >
             <>
               <div className="px-4 pt-2 pb-2 text-sm text-gray-500 ">
-                <Panel header="Size">
-                  <RefinementListSize attribute="size.values" />
-                </Panel>
-                <Panel header="color.values">
-                  <RefinementListColor attribute="color.values" />
-                </Panel>
+                <RefinementListSize attribute="size.values" />
+
+                <RefinementListColor attribute="color.values" />
 
                 {/* <DynamicWidgets fallbackComponent={FallbackComponent} /> */}
                 <DynamicWidgets fallbackComponent={FallbackComponent} />
@@ -200,11 +202,12 @@ function FallbackComponent({ attribute }: { attribute: string }) {
   if (attribute === "color.values" || attribute === "size.values") {
     return;
   }
-  return (
-    <Panel header={attribute}>
-      <RefinementList attribute={attribute} />
-    </Panel>
-  );
+
+  // <Panel header={attribute}>
+  {
+    /* </Panel> */
+  }
+  return <RefinementList attribute={attribute} />;
 }
 
 Collection.Layout = Layout;

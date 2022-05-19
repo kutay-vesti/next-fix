@@ -9,9 +9,9 @@ import { useEffect } from "react";
 const AuthCheck: NextPage = () => {
   const { data, loading, error } = useUser();
 
-  console.log("data", data);
-  console.log("error", error);
-  console.log("loading", loading);
+  // console.log("data", data);
+  // console.log("error", error);
+  // console.log("loading", loading);
   return <div>div</div>;
 };
 

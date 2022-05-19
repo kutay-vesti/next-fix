@@ -133,6 +133,13 @@ export interface CreateAddressInput {
   isDefault?: boolean | null;
 }
 
+export interface CreateUserInput {
+  email: string;
+  phone?: string | null;
+  password: string;
+  role: UserRole;
+}
+
 export interface DeleteAddressInput {
   id: string;
 }
@@ -148,11 +155,6 @@ export interface GetAttributesOfCategoryInput {
 
 export interface GetProductInput {
   id: string;
-}
-
-export interface LoginInput {
-  email: string;
-  password: string;
 }
 
 export interface ProductFilterInputType {

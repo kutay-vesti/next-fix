@@ -110,7 +110,7 @@ const MobileMenu: React.FC<IMobileMenu> = ({
                     </button>
                   </Link>
                 ) : (
-                  <Link href="/login">
+                  <Link href="/auth/login">
                     <span className="text-white  w-full h-full text-center px-2 pt-5 pb-4">
                       {" "}
                       Giriş Yap / kaydol

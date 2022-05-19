@@ -9,6 +9,7 @@ export function Panel({
   header?: React.ReactNode;
   footer?: React.ReactNode;
 }) {
+  console.log("children", children);
   return (
     <div className="ais-Panel">
       {header && <div className="ais-Panel-header">{header}</div>}

@@ -10,9 +10,9 @@ interface IAccountLayout {
 const AccountLayout: React.FC<IAccountLayout> = ({ children }) => {
   const router = useRouter();
 
-  console.log("layout router", router);
+  // console.log("layout router", router);
   const [_1, currentLocation] = _.split(router?.pathname, "account/", 2);
-  console.log(currentLocation);
+  // console.log(currentLocation);
   // const currentLocation = "profile";
   return (
     <div className="  flex flex-col  tablet:flex-row items-start justify-center p-4 te">

@@ -1,71 +1,129 @@
 import { gql, useMutation } from "@apollo/client";
-import { setAccessToken } from "@lib/accesstoken";
+
 import {
   loginMutation,
   loginMutationVariables,
 } from "graphql/__generated__/loginMutation";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { LOGIN_MUTATION } from "pages/login";
+import { getCsrfToken, getSession, signIn, useSession } from "next-auth/react";
 
 import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { Layout } from "@components/common";
+import Link from "next/link";
 
 interface ILoginForm {
   email: string;
   password: string;
 }
 
-export const LOGIN_MUTATION = gql`
-  mutation loginMutation($input: LoginInput!) {
-    login(input: $input) {
-      ok
-      token
-      error
-    }
-  }
-`;
-
-const Login: NextPage = () => {
+// const Login: NextPage = () => {
+export default function SignIn({ csrfToken, session }) {
   const {
     register,
     getValues,
     formState: { errors, isValid },
     handleSubmit,
+    setError,
   } = useForm<ILoginForm>({ mode: "onChange", shouldFocusError: true });
 
-  const router = useRouter();
+  //   useEffect(() => {
+  //     if (session) {
+  //       router.push(callbackUrl ?? "/");
+  //     }
+  //   }, [session]);
 
-  const onSubmit = () => {
-    if (!loading) {
-      const { email, password } = getValues();
-      loginMutation({
-        variables: {
-          input: {
-            email,
-            password,
-          },
-        },
-      });
-    }
-  };
-  const onCompleted = (data: loginMutation) => {
-    const {
-      login: { error, ok, token },
-    } = data;
-    if (ok && token) {
-      console.log("token", token);
-      setAccessToken(token);
-      // localStorage.setItem(LOCALSTORAGE_TOKEN, token);
-      // authToken(token);
-      // isLoggedInVar(true);
-      router.push("/");
-    } else {
-      console.log(error);
-    }
-  };
-  const [loginMutation, { data: loginMutationResult, loading, error }] =
-    useMutation<loginMutation, loginMutationVariables>(LOGIN_MUTATION, {
-      onCompleted,
+  //   const {session, loading} = useSession({
+  //     required: true,
+  //     redirectTo: "http://localhost:3000",
+  //     queryConfig: {
+  //       staleTime: 60 * 1000 * 60 * 3, // 3 hours
+  //       refetchInterval: 60 * 1000 * 5, // 5 minutes
+  //     },
+  //   });
+  const router = useRouter();
+  //   const { data: session, status } = useSession();
+
+  const [formError, setFormError] = useState("");
+
+  const callbackUrl = React.useMemo(
+    () =>
+      typeof router.query.callbackUrl == "string"
+        ? router.query.callbackUrl
+        : router.query.callbackUrl?.[0] ?? null,
+    [router]
+  );
+  if (session) {
+    typeof window !== "undefined" && router.replace(`/${callbackUrl}` ?? "/");
+  }
+
+  // console.log("callbackUrl", callbackUrl);
+  // console.log("callbackUrl", router.query.callbackUrl);
+  // console.log("callbackUrl", router.query);
+
+  const onSubmit = async () => {
+    const { email, password } = getValues();
+    const { error, ok } = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
     });
+
+    if (ok) {
+      router.push(callbackUrl ?? "/");
+    } else if (error) {
+      setError("password", { message: error });
+    }
+  };
+
+  //   const onSubmit = () => {
+  //     if (!loading) {
+  //       const { email, password } = getValues();
+  //       loginMutation({
+  //         variables: {
+  //           input: {
+  //             email,
+  //             password,
+  //           },
+  //         },
+  //       });
+  //     }
+  //   };
+  //   const onCompleted = (data: loginMutation) => {
+  //     const {
+  //       login: { error, ok, token },
+  //     } = data;
+  //     if (ok && token) {
+  //       // localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+  //       // authToken(token);
+  //       // isLoggedInVar(true);
+  //       router.push("/");
+  //     } else {
+  //       console.log(error);
+  //     }
+  //   };
+  //   const [loginMutation, { data: loginMutationResult, loading, error }] =
+  //     useMutation<loginMutation, loginMutationVariables>(LOGIN_MUTATION, {
+  //       onCompleted,
+  //     });
+
+  //   if (status === "loading") {
+  //     return <h1>Loading...</h1>;
+  //   }
+
+  //   if (status === "authenticated") {
+  //     router.replace(callbackUrl ?? "/");
+  //     return;
+  //   }
+
+  //   useEffect(() => {
+  //     if (status === "authenticated") {
+  //       router.replace(callbackUrl ?? "/");
+  //       return;
+  //     }
+  //   }, [status, callbackUrl, router]);
 
   return (
     <div>
@@ -78,13 +136,16 @@ const Login: NextPage = () => {
             Vestiyer Üye Girişi
           </h3>
           <div className="px-5 py-4 ">
-            <span>Vestiyer'e üye değil misin? </span>
+            <Link href="/auth/register">Vestiyer'e üye değil misin? </Link>
           </div>
 
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="grid gap-3 mt-1  px-5 mb-3"
+            // method="post"
+            // action="/api/auth/callback/credentials"
           >
+            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
             <div className="w-full   relative h-[56px] ">
               <input
                 {...register("email", {
@@ -160,6 +221,16 @@ peer-focus:top-[.58824rem] peer-focus:text-[#666] peer-focus:text-xs"
       </div>
     </div>
   );
-};
+}
 
-export default Login;
+export async function getServerSideProps(context) {
+  //   const { data: session, status } = await getSession(context);
+  return {
+    props: {
+      csrfToken: await getCsrfToken(context),
+      session: await getSession(context),
+    },
+  };
+}
+
+SignIn.Layout = Layout;

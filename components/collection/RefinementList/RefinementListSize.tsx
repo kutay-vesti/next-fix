@@ -36,6 +36,7 @@ export function RefinementListSize(props: RefinementListProps) {
 
   return (
     <div className={cx("ais-RefinementList", props.className)}>
+      <div>{props.attribute}</div>
       {props.searchable && (
         <div className="ais-RefinementList-searchBox">
           <ControlledSearchBox
@@ -67,14 +68,15 @@ export function RefinementListSize(props: RefinementListProps) {
           <li
             key={item.value}
             className={cx(
-              "ais-RefinementList-item  select-none flex tablet:w-full tablet:h-11 tablet:py-0  font-semibold rounded-md text-xs   text-black border cursor-pointer  transition-colors  bg-white  justify-center items-center  border-[#e6e6e6] hover:border-gray-400",
+              "ais-RefinementList-item   select-none flex tablet:w-full tablet:h-11 tablet:py-0  font-semibold rounded-md text-xs   border cursor-pointer  transition-colors    justify-center items-center  border-[#e6e6e6] hover:border-gray-400",
               item.isRefined &&
-                "ais-RefinementList-item--selected bg-black text-white border border-black"
+                "ais-RefinementList-item--selected  text-white bg-black border border-black",
+              !item.isRefined && "bg-white text-black"
             )}
           >
             <label
               className={`ais-RefinementList-label 
-              w-full flex items-center justify-center h-full text-center font-bold py-2 px-4
+              w-full flex items-center justify-center h-full text-center font-bold py-2 px-4 
                      `}
             >
               <input

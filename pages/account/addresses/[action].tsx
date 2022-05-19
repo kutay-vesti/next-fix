@@ -16,7 +16,8 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as _ from "lodash";
 import useUser from "@lib/hooks/useUser";
-
+import { useSession } from "next-auth/react";
+import Router from "next/router";
 interface IFormProps {
   title: string;
   firstname: string;
@@ -34,14 +35,20 @@ interface IParam {
   action: string;
 }
 export default function AddressAction() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
+
   const { data: user, loading: userLoading, error: userError } = useUser();
   const { data: addressData, loading: addressLoading } =
     useQuery(getAddressQuery);
 
   const router = useRouter();
 
-  console.log("router", router);
-  console.log(addressData?.myAddresses);
+  // console.log("router", router);
+  // console.log(addressData?.myAddresses);
   if (addressLoading) {
     <h1>loading...</h1>;
   }
@@ -54,9 +61,9 @@ export default function AddressAction() {
     // history.push("/account/addresses");
     router.back();
 
-    console.log(data);
-    console.log("ok", ok);
-    console.log("error", error);
+    // console.log(data);
+    // console.log("ok", ok);
+    // console.log("error", error);
   };
 
   const onUpdateCompleted = (data: updateAddress) => {
@@ -198,136 +205,145 @@ export default function AddressAction() {
       resetField("phoneNumber");
     }
   }, [currentAddress, resetField, setValue]);
+  if (status === "authenticated") {
+    if (router.query.action === "add") {
+      return (
+        <div className="w-full tablet:w-480 py-20 flex flex-col justify-start items-center ">
+          <h1>Adres Ekleyin</h1>
 
-  if (router.query.action === "add") {
-    return (
-      <div className="w-full tablet:w-480 py-20 flex flex-col justify-start items-center ">
-        <h1>Adres Ekleyin</h1>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5"
+          >
+            <Input
+              register={register}
+              inputValue="title"
+              placeHolder="Başlık"
+            />
+            <Input
+              register={register}
+              inputValue="firstname"
+              placeHolder="İsim"
+            />
+            <Input
+              register={register}
+              inputValue="lastname"
+              placeHolder="soyad"
+            />
+            <Input register={register} inputValue="city" placeHolder="city" />
+            <Input
+              register={register}
+              inputValue="addressLine1"
+              placeHolder="AddressLine 1"
+            />
+            <Input
+              register={register}
+              inputValue="addressLine2"
+              placeHolder="AddressLine 2"
+            />
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5"
-        >
-          <Input register={register} inputValue="title" placeHolder="Başlık" />
-          <Input
-            register={register}
-            inputValue="firstname"
-            placeHolder="İsim"
-          />
-          <Input
-            register={register}
-            inputValue="lastname"
-            placeHolder="soyad"
-          />
-          <Input register={register} inputValue="city" placeHolder="city" />
-          <Input
-            register={register}
-            inputValue="addressLine1"
-            placeHolder="AddressLine 1"
-          />
-          <Input
-            register={register}
-            inputValue="addressLine2"
-            placeHolder="AddressLine 2"
-          />
-
-          <Input
-            register={register}
-            inputValue="zipCode"
-            placeHolder="zipCode"
-          />
-          {/* <Input
+            <Input
+              register={register}
+              inputValue="zipCode"
+              placeHolder="zipCode"
+            />
+            {/* <Input
             register={register}
             inputValue="country"
             placeHolder="country"
           /> */}
-          <Input
-            register={register}
-            inputValue="phoneNumber"
-            placeHolder="phoneNumber"
-          />
+            <Input
+              register={register}
+              inputValue="phoneNumber"
+              placeHolder="phoneNumber"
+            />
 
-          <Button
-            loading={false}
-            canClick={true}
-            actionText="Adresi kaydet"
-          ></Button>
-        </form>
-      </div>
-    );
+            <Button
+              loading={false}
+              canClick={true}
+              actionText="Adresi kaydet"
+            ></Button>
+          </form>
+        </div>
+      );
+    } else {
+      return (
+        <div className="w-full py-20 flex flex-col justify-start items-center ">
+          <h1>Adresinizi düzenleyin</h1>
+          <h1>Adres Adı: {currentAddress?.title}</h1>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5"
+          >
+            <Input
+              register={register}
+              inputValue="title"
+              placeHolder="Başlık"
+              defaultValue={currentAddress?.title}
+            />
+            <Input
+              register={register}
+              inputValue="firstname"
+              placeHolder="İsim"
+              defaultValue={currentAddress?.firstname}
+            />
+            <Input
+              register={register}
+              inputValue="lastname"
+              placeHolder="soyad"
+              defaultValue={currentAddress?.lastname}
+            />
+            <Input
+              register={register}
+              inputValue="city"
+              placeHolder="city"
+              defaultValue={currentAddress?.city}
+            />
+            <Input
+              register={register}
+              inputValue="addressLine1"
+              placeHolder="AddressLine 1"
+              defaultValue={currentAddress?.addressLine1}
+            />
+            <Input
+              register={register}
+              inputValue="addressLine2"
+              placeHolder="AddressLine 2"
+              defaultValue={currentAddress?.addressLine2}
+            />
+            <Input
+              register={register}
+              inputValue="state"
+              placeHolder="AddressLine 2"
+              defaultValue={currentAddress?.state}
+            />
+
+            <Input
+              register={register}
+              inputValue="zipCode"
+              placeHolder="zipCode"
+              defaultValue={currentAddress?.zipCode}
+            />
+
+            <Input
+              register={register}
+              inputValue="phoneNumber"
+              placeHolder="phoneNumber"
+              defaultValue={currentAddress?.phoneNumber}
+            />
+
+            <Button
+              loading={false}
+              canClick={true}
+              actionText="değişiklikleri kaydet"
+            ></Button>
+          </form>
+        </div>
+      );
+    }
   }
-
-  return (
-    <div className="w-full py-20 flex flex-col justify-start items-center ">
-      <h1>Adresinizi düzenleyin</h1>
-      <h1>Adres Adı: {currentAddress?.title}</h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="grid max-w-screen-sm gap-3 mt-5 w-full mb-5"
-      >
-        <Input
-          register={register}
-          inputValue="title"
-          placeHolder="Başlık"
-          defaultValue={currentAddress?.title}
-        />
-        <Input
-          register={register}
-          inputValue="firstname"
-          placeHolder="İsim"
-          defaultValue={currentAddress?.firstname}
-        />
-        <Input
-          register={register}
-          inputValue="lastname"
-          placeHolder="soyad"
-          defaultValue={currentAddress?.lastname}
-        />
-        <Input
-          register={register}
-          inputValue="city"
-          placeHolder="city"
-          defaultValue={currentAddress?.city}
-        />
-        <Input
-          register={register}
-          inputValue="addressLine1"
-          placeHolder="AddressLine 1"
-          defaultValue={currentAddress?.addressLine1}
-        />
-        <Input
-          register={register}
-          inputValue="addressLine2"
-          placeHolder="AddressLine 2"
-          defaultValue={currentAddress?.addressLine2}
-        />
-        <Input
-          register={register}
-          inputValue="state"
-          placeHolder="AddressLine 2"
-          defaultValue={currentAddress?.state}
-        />
-
-        <Input
-          register={register}
-          inputValue="zipCode"
-          placeHolder="zipCode"
-          defaultValue={currentAddress?.zipCode}
-        />
-
-        <Input
-          register={register}
-          inputValue="phoneNumber"
-          placeHolder="phoneNumber"
-          defaultValue={currentAddress?.phoneNumber}
-        />
-
-        <Button
-          loading={false}
-          canClick={true}
-          actionText="değişiklikleri kaydet"
-        ></Button>
-      </form>
-    </div>
-  );
+  if (status === "unauthenticated") {
+    Router.replace("/auth/login");
+  }
+  return <div className="h-screen">Hesabınızı açınız</div>;
 }

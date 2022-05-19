@@ -100,7 +100,7 @@ const Cart: NextPage = () => {
     product: myCart_myCart_cart_cartItems,
     quantity: number = 1
   ) => {
-    console.log("ADDING SKU", product.sku.sku);
+    // console.log("ADDING SKU", product.sku.sku);
     addToCartMutation({
       variables: {
         input: {
@@ -120,7 +120,7 @@ const Cart: NextPage = () => {
     product: myCart_myCart_cart_cartItems,
     quantity: number = 1
   ) => {
-    console.log("REMOVE SKU", product.sku.sku);
+    // console.log("REMOVE SKU", product.sku.sku);
     removeItemFromCartMutation({
       variables: {
         input: {
@@ -330,7 +330,7 @@ const Cart: NextPage = () => {
                   name="discount"
                   id="discount"
                   className="pt-7 pb-2  w-full rounded px-4 peer"
-                  onChange={() => console.log("render indirim kodu")}
+                  // onChange={() => console.log("render indirim kodu")}
                 />
                 <label
                   htmlFor="discount"
@@ -416,7 +416,9 @@ const Cart: NextPage = () => {
             <div className="w-full phoneFin:w-[420px] bg-[#f8f8f8] pb-4 px-5 ">
               <Link
                 href={
-                  user ? `/CheckoutLayout` : `/login?redirect=CheckoutLayout`
+                  user
+                    ? `/CheckoutLayout`
+                    : `/auth/login?callbackUrl=CheckoutLayout`
                 }
               >
                 <div className="bg-black rounded-3xl text-white w-full text-base font-semibold py-4 flex justify-center">
@@ -438,7 +440,9 @@ const Cart: NextPage = () => {
               </div>
               <Link
                 href={
-                  user ? `/CheckOutLayout` : `/login?redirect=CheckOutLayout`
+                  user
+                    ? `/CheckOutLayout`
+                    : `/auth/login?callbackUrl=CheckoutLayout`
                 }
               >
                 <div className="bg-black py-4 px-8 rounded-full text-sm font-semibold text-white text-center mb-3">
