@@ -36,6 +36,7 @@ const getProductsQuery = gql`
           imageURL
           altText
           isListing
+          color
         }
         collections {
           name

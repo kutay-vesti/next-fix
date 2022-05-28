@@ -60,7 +60,7 @@ const ProductCarousel: React.FC<IProductCarousel> = ({
 
   return (
     <div className=" flex justify-center  items-center ">
-      <div className="py-16  w-full max-w-7xl ">
+      <div className=" py-4 phoneFin:py-16  w-full max-w-7xl ">
         <div className="px-4 flex items-center justify-between sm:px-6 lg:px-0 ">
           <h2 className="text-lg tracking-tight font-semibold text-gray-900">
             {HeadlineText}
@@ -126,6 +126,7 @@ const ProductCarousel: React.FC<IProductCarousel> = ({
             {productData?.getProducts.products?.map((product) => (
               <SwiperSlide key={product.id}>
                 <ProductCard
+                  isCollection={false}
                   id={product.id}
                   name={product.name}
                   rentPrice={product.rentalPrice4Days}

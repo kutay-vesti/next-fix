@@ -1,21 +1,43 @@
+import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
+import ReturnLP_Hero_DESK_05052022 from "./../../../assets/ReturnLP_Hero_DESK_05052022.webp";
+import ReturnHP_Hero_Mobile_New from "./../../../assets/ReturnHP_Hero_Mobile_New.webp";
 
 const Hero: FC = () => {
   return (
-    <div className="relative -z-50">
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gray-100" />
-      <div className="w-full ">
-        <div className="relative shadow-xl ">
-          <div className="absolute inset-0">
-            <img
+    <div className="relative -z-50 h-fit">
+      {/* <div className="absolute inset-x-0 bottom-0 bg-gray-100" /> */}
+      <div className="w-full h-fit">
+        <div className="relative  h-fit  ">
+          <div className="block h-fit">
+            {/* <img
+              src={ReturnLP_Hero_DESK_05052022}
               className="h-full w-full object-cover"
-              src="https://cdn.rtrcdn.com/assets/imgs/20211229_ReturnHP_Hero.jpg"
               alt="People working on laptops"
-            />
+            /> */}
+            <div className="hidden phoneFin:block h-full">
+              <Image
+                src={ReturnLP_Hero_DESK_05052022}
+                alt="people"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="block phoneFin:hidden h-fit">
+              <Image
+                src={ReturnHP_Hero_Mobile_New}
+                alt="people"
+                className="h-full w-full object-cover"
+              />
+            </div>
           </div>
-          <div className="relative flex flex-col px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
-            <h1 className="text-left leading-snug text-4xl font-semibold tracking-normal sm:text-5xl lg:text-6xl  ">
+          <div
+            className="absolute text-left phoneFin:text-center  top-1/2 left-1/2 -ml-16 phoneFin:ml-0 
+        transform -translate-x-1/2
+           -translate-y-1/2 flex flex-col
+           phoneFin:px-4 phoneFin:py-16 lg:py-32 lg:px-8"
+          >
+            <h1 className=" leading-snug text-4xl font-semibold tracking-normal sm:text-5xl lg:text-6xl   ">
               <span className=" text-white leading-snug  ">
                 Your Dream Closet,
               </span>
@@ -41,7 +63,7 @@ const Hero: FC = () => {
               </span>
             </div>
 
-            <div className="mt-10 sm:max-w-none sm:flex sm:justify-start">
+            <div className="mt-10 sm:max-w-none sm:flex sm:justify-start self-start phoneFin:self-center">
               <div className="space-y-4 sm:space-y-0  sm:inline-grid sm:grid-cols-2 sm:gap-5">
                 <button className="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-gray-900 bg-white hover:opacity-80 sm:px-8">
                   Explore Membership

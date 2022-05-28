@@ -5,6 +5,7 @@
 /* @import "@algolia/react-instantsearch-widget-color-refinement-list/dist/style.css";  */
 /* @import '@algolia/react-instantsearch-widget-size-refinement-list/dist/style.css'; */
 
+
 @layer components {
     .input {
       @apply py-3 px-2 border border-black bg-gray-50 shadow-inner focus:ring-2 focus:ring-blue-600  focus:ring-opacity-50 focus:outline-none;

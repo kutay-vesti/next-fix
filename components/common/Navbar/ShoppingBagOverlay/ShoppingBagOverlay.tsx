@@ -146,7 +146,7 @@ const ShoppingBagOverlay: FC = () => {
                     </div>
                   </div>
                 </Link>
-                <Link href="/CheckoutLayout">
+                <Link href="/checkout">
                   <div className="w-full h-full">
                     <div className="w-full h-11 bg-black text-white flex items-center justify-center">
                       <span className="w-full text-center text-base font-semibold">

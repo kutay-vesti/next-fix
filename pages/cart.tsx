@@ -415,11 +415,7 @@ const Cart: NextPage = () => {
             </div>
             <div className="w-full phoneFin:w-[420px] bg-[#f8f8f8] pb-4 px-5 ">
               <Link
-                href={
-                  user
-                    ? `/CheckoutLayout`
-                    : `/auth/login?callbackUrl=CheckoutLayout`
-                }
+                href={user ? `/checkout` : `/auth/login?callbackUrl=checkout`}
               >
                 <div className="bg-black rounded-3xl text-white w-full text-base font-semibold py-4 flex justify-center">
                   {!loadingState ? <span>Satın Al</span> : <span>Loading</span>}
@@ -439,11 +435,7 @@ const Cart: NextPage = () => {
                 </span>
               </div>
               <Link
-                href={
-                  user
-                    ? `/CheckOutLayout`
-                    : `/auth/login?callbackUrl=CheckoutLayout`
-                }
+                href={user ? `/checkout` : `/auth/login?callbackUrl=checkout`}
               >
                 <div className="bg-black py-4 px-8 rounded-full text-sm font-semibold text-white text-center mb-3">
                   <span className="">Satın al</span>

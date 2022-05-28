@@ -72,7 +72,7 @@ export default function SignIn({ csrfToken, session }) {
     });
 
     if (ok) {
-      router.push(callbackUrl ?? "/");
+      router.push(`/${callbackUrl}` ?? "/");
     } else if (error) {
       setError("password", { message: error });
     }

@@ -41,7 +41,10 @@ import { RefinementListColor } from "@components/collection/RefinementList/Refin
 import CustomSortBy from "@components/collection/SortBy/SortBy";
 import { MobileFilterMenuLayout } from "@components/collection/MobileFilterMenu/MobileFilterMenuLayout/MobileFilterMenuLayout";
 
-const client = algoliasearch("2S3Q24UHG3", "2479538bbf6bfdcdf3c5e7103b18b1cb");
+const client = algoliasearch("MPJ5JMQA9F", "275895629962e01ea53d19aee023ff1a");
+// const client = algoliasearch("2S3Q24UHG3", "2479538bbf6bfdcdf3c5e7103b18b1cb");
+// const client = algoliasearch("UPS7TEA6W2", "236e938e6665c9fc372e08f514ca68d3");
+
 type HitProps = {
   hit: AlgoliaHit<{
     name: string;
@@ -67,14 +70,15 @@ function Hit({ hit }: any) {
     <>
       {/* <span>{JSON.stringify(hit, 2, null)}</span> */}
       <ProductCard
-        id={hit.id}
+        isCollection={true}
+        id={hit.objectID}
         name={hit.name}
         rentPrice={hit.discountedRentalPrice4Days}
         retailPrice={hit.discountedRetailPrice}
         description={hit.description}
         marketValue={hit.marketValue}
-        productImages={hit.imageURL}
-        color={hit.color}
+        productImages={hit.productImages}
+        color={hit.availableColors}
         brandName={hit.brand?.name}
       ></ProductCard>
     </>
@@ -90,8 +94,13 @@ const Collection: NextPage = () => {
     <div className="flex flex-row items-center  justify-center ">
       <InstantSearch
         searchClient={client}
-        indexName="vesti-test"
-        initialUiState={{ indexName: { collection: "collection" } }}
+        indexName="vestiyer_pre"
+        // indexName="vesti-test"
+        // indexName="test_index"
+        // initialUiState={{
+        //   indexName: { collectionSlugs: router.query.collection },
+
+        // }}
         routing={{
           router: history({
             getLocation() {
@@ -104,7 +113,7 @@ const Collection: NextPage = () => {
           }),
         }}
       >
-        <Configure filters={`collection:${router.query.collection}`} />
+        <Configure filters={`collectionSlugs:${router.query.collection}`} />
         <div className="flex max-w-[1880px] w-full overflow-visible flex-col ">
           <div className=" mb-3 flex justify-between items-center">
             <h1 className="font-black text-4xl  uppercase pb-3">
@@ -135,9 +144,9 @@ const Collection: NextPage = () => {
           <div className="flex">
             <div className="flex-none  w-[230px]  h-screen sticky top-0 left-0 overflow-scroll  items-start justify-start overflow-x-hidden tablet:block hidden">
               <div className="px-4 pt-2 pb-2 text-sm text-gray-500 ">
-                <RefinementListSize attribute="size.values" />
+                <RefinementListSize attribute="availableSizes" />
 
-                <RefinementListColor attribute="color.values" />
+                <RefinementListColor attribute="availableColors" />
 
                 {/* <DynamicWidgets fallbackComponent={FallbackComponent} /> */}
                 <DynamicWidgets
@@ -183,9 +192,9 @@ const Collection: NextPage = () => {
           >
             <>
               <div className="px-4 pt-2 pb-2 text-sm text-gray-500 ">
-                <RefinementListSize attribute="size.values" />
+                <RefinementListSize attribute="availableSizes" />
 
-                <RefinementListColor attribute="color.values" />
+                <RefinementListColor attribute="availableColors" />
 
                 {/* <DynamicWidgets fallbackComponent={FallbackComponent} /> */}
                 <DynamicWidgets fallbackComponent={FallbackComponent} />
@@ -199,7 +208,7 @@ const Collection: NextPage = () => {
 };
 export default Collection;
 function FallbackComponent({ attribute }: { attribute: string }) {
-  if (attribute === "color.values" || attribute === "size.values") {
+  if (attribute === "availableColors" || attribute === "availableSizes") {
     return;
   }
 
@@ -207,6 +216,8 @@ function FallbackComponent({ attribute }: { attribute: string }) {
   {
     /* </Panel> */
   }
+
+  console.log("attributes", attribute);
   return <RefinementList attribute={attribute} />;
 }
 

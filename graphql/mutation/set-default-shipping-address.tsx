@@ -4,10 +4,6 @@ const setDefaultShippingAddressMutation = gql`
     setDefaultShippingAddress(input: $input) {
       ok
       error
-      defaultShippingAddress {
-        id
-        title
-      }
     }
   }
 `;

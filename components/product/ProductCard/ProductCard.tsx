@@ -25,13 +25,15 @@ interface IProductCartProps {
   description: string;
   marketValue: number;
   productImages: getProducts_getProducts_products_productImages[] | any;
-  color: getProducts_getProducts_products_color | null;
+  color: getProducts_getProducts_products_color | any | null;
   brandName: string | undefined;
+  isCollection: boolean;
 }
 
 const placeholderImg = "/product-img-placeholder.svg";
 
 const ProductCard: FC<IProductCartProps> = ({
+  isCollection,
   name,
   description,
   id,
@@ -44,13 +46,16 @@ const ProductCard: FC<IProductCartProps> = ({
 }) => {
   const [heartState, setHeartState] = useState(false);
 
-  const [productColor, setProductColor] = useState(color?.values?.[0]);
+  const [productColor, setProductColor] = useState(
+    isCollection ? color?.[0] : color?.values?.[0]
+  );
 
   const swiper1 = useSwiper();
   const [swiperInst, setSwiperInst] = useState<SwiperCore>();
 
   const [hoverRef, isHovered] = useHover();
 
+  // console.log("color", color?.[0]);
   // useEffect(() => {
   //   if (isHovered && swiperInst !== undefined) {
   //     swiper1.autoplay.start();
@@ -63,6 +68,16 @@ const ProductCard: FC<IProductCartProps> = ({
   // console.log("isHovered", isHovered);
   const delayedHover: boolean = useDebounce(isHovered, 250);
 
+  console.log("iitems ", productImages);
+
+  // console.log("productImages", productImages);
+  const filteredImages = _.filter(productImages, function (o) {
+    if (o.color === productColor) {
+      return o;
+    }
+  });
+  // console.log("filteredImages", filteredImages);
+
   useEffect(() => {
     if (isHovered && delayedHover && swiperInst !== undefined) {
       swiperInst.slideTo(1);
@@ -70,6 +85,10 @@ const ProductCard: FC<IProductCartProps> = ({
       swiperInst.slideTo(0, 500);
     }
   }, [delayedHover, isHovered, swiperInst]);
+
+  console.log("productColor", productColor);
+
+  const mapItems = isCollection ? color : color?.values;
 
   return (
     <div
@@ -140,28 +159,25 @@ const ProductCard: FC<IProductCartProps> = ({
                   // modules={[Autoplay]}
                   className="mySwiper"
                 >
-                  <SwiperSlide key={productImages} className="">
+                  {/* <SwiperSlide key={productImages} className="">
                     <img
                       className="p-card-img w-full h-full object-cover "
                       src="https://vestiyerimagebucket.s3.amazonaws.com/finalProductImages/halston/mSGaWaZTT5Bt/pink/editorial/1080x"
                       alt={productImages}
                     />
-                  </SwiperSlide>
-                  {productImages.lenght > 2
+                  </SwiperSlide> */}
+                  {filteredImages.lenght > 1
                     ? null
-                    : // (
-                      //   productImages?.map((image) => (
-                      //     <SwiperSlide key={image.imageURL} className="">
-                      //       <img
-                      //         className="p-card-img w-full h-full object-cover "
-                      //         // className="p-card-img w-[280px] h-[420px] object-cover"
-                      //         src={image.imageURL}
-                      //         alt={description}
-                      //       />
-                      //     </SwiperSlide>
-                      //   ))
-                      // )
-                      null}
+                    : filteredImages?.map((image) => (
+                        <SwiperSlide key={image.imageURL} className="">
+                          <img
+                            className="p-card-img w-full h-full object-cover "
+                            // className="p-card-img w-[280px] h-[420px] object-cover"
+                            src={image.imageURL}
+                            alt={description}
+                          />
+                        </SwiperSlide>
+                      ))}
                 </Swiper>
               </div>
               <div className="image-overlay absolute top-0 " hidden>
@@ -185,7 +201,7 @@ const ProductCard: FC<IProductCartProps> = ({
                       </RadioGroup.Label> */}
 
                       <div className="flex items-center space-x-2  ">
-                        {color?.values?.map((col: any, index: number) => {
+                        {mapItems.map((col: any, index: number) => {
                           if (index > 4) {
                             return <></>;
                           }

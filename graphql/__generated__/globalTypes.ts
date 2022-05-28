@@ -133,6 +133,12 @@ export interface CreateAddressInput {
   isDefault?: boolean | null;
 }
 
+export interface CreateOrderInput {
+  currency: string;
+  shippingAddressId: string;
+  billingAddressId: string;
+}
+
 export interface CreateUserInput {
   email: string;
   phone?: string | null;
@@ -179,6 +185,11 @@ export interface RemoveItemFromCartInput {
   itemType: CartItemType;
   quantity: number;
   sku: string;
+}
+
+export interface SetCartAddressInput {
+  shippingAddressId?: string | null;
+  billingAddressId?: string | null;
 }
 
 export interface SetDefaultAddressInput {

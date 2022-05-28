@@ -3,9 +3,30 @@ import { Logo } from "@components/ui";
 
 import Link from "next/link";
 import { FC, useState } from "react";
+
 import AccountOverlay from "./AccountOverlay";
 import NavbarRoot from "./NavbarRoot";
 import ShoppingBagOverlay from "./ShoppingBagOverlay";
+import {
+  DynamicWidgets,
+  InstantSearch,
+  Hits,
+  Highlight,
+  SearchBox,
+  InstantSearchServerState,
+  SortBy,
+  InstantSearchSSRProvider,
+  Index,
+} from "react-instantsearch-hooks-web";
+import { history } from "instantsearch.js/es/lib/routers/index.js";
+
+import algoliasearch from "algoliasearch/lite";
+import { Configure } from "react-instantsearch-hooks";
+
+import { usePagination, useSearchBox } from "react-instantsearch-hooks";
+import { autocomplete, AutocompleteOptions } from "@algolia/autocomplete-js";
+import { Autocomplete } from "./Autocomplete/Autocomplete";
+
 interface IHeader {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
@@ -36,6 +57,9 @@ interface IHeader {
   };
 }
 
+// const client = algoliasearch("2S3Q24UHG3", "2479538bbf6bfdcdf3c5e7103b18b1cb");
+const client = algoliasearch("latency", "6be0576ff61c053d5f9a3225e2a90f76");
+
 const Navbar: FC<IHeader> = ({ setOpen, open, navigation }) => {
   const [index1, setIndex1] = useState<any>(null);
 
@@ -49,6 +73,10 @@ const Navbar: FC<IHeader> = ({ setOpen, open, navigation }) => {
     setIndex1(null);
     setClicked(false);
   };
+
+  function Hit({ hit }) {
+    return JSON.stringify(hit);
+  }
 
   const handleDisplay = (index: any, index1: any): boolean => {
     if (index1 === index) {
@@ -86,20 +114,65 @@ const Navbar: FC<IHeader> = ({ setOpen, open, navigation }) => {
               </a>
             </Link>
           </div>
-          <div className="flex gap-x-2 justify-center items-center mx-4 ">
-            <div className="hidden tablet:block ">
-              <form
-                className="flex justify-center items-center"
-                onSubmit={() => console.log("searching")}
+          <div className="flex gap-x-2 justify-center items-center mx-4 relative">
+            <div className="hidden tablet:block  ">
+              {/* <SearchBox /> */}
+              <InstantSearch
+                searchClient={client}
+                // indexName="vesti-test"
+                indexName="instant_search"
+                stalledSearchDelay={200}
+                // initialUiState={{ indexName: { collection: "collection" } }}
+                // routing={{
+                //   router: history({
+                //     getLocation() {
+                //       if (typeof window === "undefined") {
+                //         return new URL(url!) as unknown as Location;
+                //       }
+
+                //       return window.location;
+                //     },
+                //   }),
+                // }}
               >
-                <input
-                  className="border-b border-black py-1 text-sm focus:outline-none placeholder:text-sm placeholder:text-[#333] "
-                  placeholder="Arama yap "
-                ></input>
-                <div className="pr-2">
-                  <Search className="h-6 w-6 ml-0.5 text-[#333] hover:opacity-70" />
+                {/*                 
+                <form
+                  className="flex justify-center items-center"
+                  onSubmit={() => console.log("searching")}
+                >
+                  <input
+                    className="border-b border-black py-1 text-sm focus:outline-none placeholder:text-sm placeholder:text-[#333] "
+                    placeholder="Arama yap "
+                  ></input>
+                  <div className="pr-2">
+                    <Search className="h-6 w-6 ml-0.5 text-[#333] hover:opacity-70" />
+                   
+                  </div>
+                </form> */}
+                {/* <SearchBox /> */}
+                <div className="bg-red-600 w-50 h-10">
+                  {/* <Autocomplete
+                    searchClient={client}
+                    placeholder="Search products"
+                    detachedMediaQuery="none"
+                    openOnFocus
+                  /> */}
+                  {/* <AutoComplete /> */}
+                  <Autocomplete
+                    searchClient={client}
+                    placeholder="Search products1"
+                    detachedMediaQuery="none"
+                    openOnFocus
+                    className="z-50"
+                  />
                 </div>
-              </form>
+                <Configure hitsPerPage={4} />
+                {/* <div className="w-60 h-60 bg-white absolute"> */}
+                {/* <Index indexName="">
+                    <Hits />
+                  </Index> */}
+                {/* </div> */}
+              </InstantSearch>
             </div>
             {/* className="p-2 hover:bg-gray-200 rounded-full transition-all flex items-center justify-center" */}
             {/* <Link href="/account/orders" className="">

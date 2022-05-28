@@ -25,6 +25,7 @@ export interface getProducts_getProducts_products_productImages {
   imageURL: string;
   altText: string | null;
   isListing: boolean | null;
+  color: string | null;
 }
 
 export interface getProducts_getProducts_products_collections {

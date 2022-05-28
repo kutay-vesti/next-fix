@@ -5,6 +5,18 @@ import Footer from "../Footer";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import Navbar from "../Navbar";
 
+import algoliasearch from "algoliasearch/lite";
+import { Hit as AlgoliaHit } from "instantsearch.js";
+import {
+  DynamicWidgets,
+  InstantSearch,
+  Hits,
+  Highlight,
+  SearchBox,
+  InstantSearchServerState,
+  SortBy,
+  InstantSearchSSRProvider,
+} from "react-instantsearch-hooks-web";
 export type Category = {
   id: string;
   name: string;
@@ -27,7 +39,7 @@ export type Page = {
   // Order in which this page should display on the storefront. (Lower integers specify earlier display.)
   sort_order?: number;
 };
-
+const client = algoliasearch("2S3Q24UHG3", "2479538bbf6bfdcdf3c5e7103b18b1cb");
 interface Props {
   pageProps: {
     pages?: Page[];
@@ -35,6 +47,7 @@ interface Props {
   };
   children: ReactNode;
 }
+import { history } from "instantsearch.js/es/lib/routers/index.js";
 
 const Layout: React.FC<Props> = ({
   children,

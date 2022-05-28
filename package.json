@@ -12,6 +12,11 @@
     "apollo:codegen": " rimraf graphql/__generated__ && apollo client:codegen graphql/__generated__ --target=typescript --outputFlat"
   },
   "dependencies": {
+    "@algolia/autocomplete-core": "^1.6.3",
+    "@algolia/autocomplete-js": "^1.6.3",
+    "@algolia/autocomplete-plugin-query-suggestions": "^1.6.3",
+    "@algolia/autocomplete-plugin-recent-searches": "^1.6.3",
+    "@algolia/autocomplete-theme-classic": "^1.6.3",
     "@apollo/client": "^3.6.2",
     "@headlessui/react": "^1.6.1",
     "algoliasearch": "4.11.0",

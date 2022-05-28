@@ -3,6 +3,7 @@ import Layout from "@components/common/Layout";
 import ProductCarousel from "@components/common/ProductCarousel";
 
 import { EventType, Hero } from "@components/home";
+import CTAHero from "@components/home/CTAHero";
 import { Divider } from "@components/ui";
 import { initializeApollo } from "@lib/apollo";
 import { getProductsQuery, getShopEventTypeQuery } from "graphql/queries";
@@ -38,7 +39,7 @@ export const getStaticProps: GetStaticProps = async () => {
     variables: {
       input: {
         category: "elbise",
-        collections: ["collection"],
+        collections: ["home-page"],
         eventTypes: null,
         colors: null,
         sizes: null,
@@ -68,10 +69,12 @@ export default function Home({
       <Hero />
       <EventType eventTypeQuery={eventTypeQuery} />
       <Divider />
-      <Link href="/collections/collection">collection</Link>
-
-      <Link href="/auth/login">login</Link>
-      <Link href="/auth-check">auth</Link>
+      <ProductCarousel
+        CollectionName="collection"
+        HeadlineText="Recent Collection"
+        productData={productData}
+      />
+      <CTAHero />
       <ProductCarousel
         CollectionName="collection"
         HeadlineText="Recent Collection"
